@@ -1,15 +1,13 @@
 package com.fatec.fatura.persistencia;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import com.fatec.fatura.model.Fatura;
@@ -29,7 +27,7 @@ class TUReq16EmissaoDaFaturaTests {
 			// entao fatura é registrada com data de emisssao igual a data de hoje
 			assertNotNull(fatura);
 		} catch (Exception e) {
-			logger.info(">>>>>> ct01 - nao deveria falhar => " + e.getMessage());
+			logger.info(">>>>>> ct01 - mensagem de erro => " + e.getMessage());
 			fail("nao deveria falhar fatura valida");
 
 		}
@@ -45,10 +43,79 @@ class TUReq16EmissaoDaFaturaTests {
 			// entao retorna mensagem de erro
 			
 		} catch (Exception e) {
-			logger.info(">>>>>> ct01 - nao deveria falhar => " + e.getMessage());
+			logger.info(">>>>>> ct02 - mensagem de erro => " + e.getMessage());
 			assertEquals("CPF invalido", e.getMessage());
         }
 
 	}
-	
+
+		@Test
+	void ct03_quando_dados_invalidos_retorna_msg_erro() {
+		try {
+			// dado que as informacoes sao invalidas
+			// quando confirmo a fatura
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			fatura = new Fatura("", dataVencimento, "moveis planejados", "1000.50");
+			// entao retorna mensagem de erro
+			
+		} catch (Exception e) {
+			logger.info(">>>>>> ct03 - mensagem de erro => " + e.getMessage());
+			assertEquals("CPF invalido", e.getMessage());
+        }
+
+
+	}
+
+
+	@Test
+    void ct04_quando_dados_invalidos_retorna_msg_erro() {
+        try {
+            // dado que as informacoes sao invalidas
+            LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+            // quando confirmo a fatura
+            fatura = new Fatura("390863600092", dataVencimento, "moveis planejados", "1000.50");
+            // entao retorna mensagem de erro
+            fail("Deveria Falhar");
+        } catch (Exception e) {
+            logger.info(">>>>>> ct03 - mensagem de erro => " + e.getMessage());
+            assertEquals("CPF invalido", e.getMessage());
+        }
+ 
+ 
+    }
+
+
+		@Test
+    void ct05_quando_dados_invalidos_retorna_msg_erro() {
+        try {
+            // dado que as informacoes sao invalidas
+            LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+            // quando confirmo a fatura
+            fatura = new Fatura("390.863.600-09", dataVencimento, "moveis planejados", "1000.50");
+            // entao retorna mensagem de erro
+            fail("Deveria Falhar");
+        } catch (Exception e) {
+            logger.info(">>>>>> ct03 - mensagem de erro => " + e.getMessage());
+            assertEquals("CPF invalido", e.getMessage());
+        }
+ 
+ 
+    }
+
+
+	@Test
+	void ct06_quando_dados_invalidos_retorna_msg_erro() {
+		try {
+			// dado que as informacoes sao invalidas
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			// quando confirmo a fatura
+			fatura = new Fatura("           ", dataVencimento, "moveis planejados", "1000.50");
+			// entao retorna mensagem de erro
+			fail("Deveria falhar");						
+		} catch (Exception e) {
+			logger.info(">>>>>> ct05 - mensagem de erro => " + e.getMessage());
+			assertEquals("CPF invalido", e.getMessage());
+        }
+
+	}
 }
